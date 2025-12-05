@@ -50,9 +50,8 @@ Perfect for **FAANG interviews, enterprise projects, architecture discussions, a
 
 # 🏗 Architecture (PNG)
 
-<p align="center">
-  <img src="docs/images/architecture.png" width="95%" />
-</p>
+<img width="1024" height="1024" alt="ChatGPT Image Dec 5, 2025, 07_31_55 PM" src="https://github.com/user-attachments/assets/21b6c050-9063-484e-ae2e-03d41f83e7e0" />
+
 
 ---
 
