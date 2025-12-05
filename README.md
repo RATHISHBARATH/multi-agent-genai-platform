@@ -1,5 +1,6 @@
 
-![Uploading ChatGPT Image Dec 5, 2025, 08_05_56 PM.png…]()
+<img width="1536" height="1024" alt="ChatGPT Image Dec 5, 2025, 08_05_56 PM" src="https://github.com/user-attachments/assets/05831883-fa69-4d71-af7d-3f07e20c64f7" />
+
 
 # 🚀 Multi-Agent GenAI Platform  
 **Autonomous Research • LLM Reasoning • Vector Search • PPT & Video Generation • Cloud-Native Architecture**
