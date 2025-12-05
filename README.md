@@ -231,5 +231,5 @@ Rathish Barath
 
 GitHub: @rathishbarath
 
-Email: your_email@example.com
+Email: rathishbarathjobs@gmail.com
 
