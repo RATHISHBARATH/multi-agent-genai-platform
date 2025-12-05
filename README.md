@@ -1,7 +1,4 @@
-!-- PROJECT BANNER -->
-<p align="center">
-  <img src="docs/images/banner.png" width="100%" />
-</p>
+
 
 # 🚀 Multi-Agent GenAI Platform  
 **Autonomous Research • LLM Reasoning • Vector Search • PPT & Video Generation • Cloud-Native Architecture**
@@ -29,7 +26,6 @@
 
 This is a **production-grade Multi-Agent GenAI Orchestration Platform** built using real enterprise architecture patterns used inside:
 
-**Google · Meta · Amazon · Microsoft · Intuit · NVIDIA · OpenAI**
 
 The system autonomously:
 
@@ -43,20 +39,12 @@ The system autonomously:
 - Ships with full observability (Prometheus, Grafana, OTEL)  
 - Deploys to Kubernetes via Helm + GitHub Actions CD  
 
-This repository is designed for:
 
-🟩 FAANG Interviews  
-🟩 Portfolio Projects  
-🟩 Research Automation  
-🟩 Enterprise-level GenAI development  
-
----
 
 # 🏗 Architecture Diagram (PNG)
 
-<p align="center">
-  <img src="docs/images/architecture.png" width="95%" />
-</p>
+
+<img width="1536" height="1024" alt="ChatGPT Image Dec 5, 2025, 08_00_44 PM" src="https://github.com/user-attachments/assets/482aee61-232d-402c-8698-593d1ac7a8a2" />
 
 ---
 
@@ -275,8 +263,7 @@ Copy code
 bash scripts/generate_demo_gif.sh
 Embed:
 
-<p align="center"> <img src="docs/demo/demo.gif" width="70%" /> </p>
-🌍 Portfolio Website Section
+
 Multi-Agent GenAI Platform
 
 A production-ready AI orchestration engine built with distributed microservices, LLM reasoning, semantic search, and automated media generation.
