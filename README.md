@@ -294,4 +294,4 @@ Apache 2.0
 📬 Contact
 Rathish Barath
 GitHub: https://github.com/rathishbarath
-Email: your_email@example.com
+Email: rathishbarathjobs@gmail.com
