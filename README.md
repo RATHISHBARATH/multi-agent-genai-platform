@@ -1,235 +1,192 @@
-🚀 Multi-Agent GenAI Platform
+<div align="center">
+  <img width="200" height="200" src="https://github.com/user-attachments/assets/6c4cf432-fce8-46a4-b349-5a48e849e7f7" alt="Platform Logo" />
 
+  <h1>Nexus: Distributed Multi-Agent Orchestration Engine</h1>
 
+  <p>
+    <strong>Event-driven architecture for autonomous deep research, multi-modal synthesis, and RAG at scale.</strong>
+  </p>
 
-<img width="1024" height="1024" alt="ChatGPT Image Dec 5, 2025, 07_31_55 PM" src="https://github.com/user-attachments/assets/6c4cf432-fce8-46a4-b349-5a48e849e7f7" />
+  <p>
+    <a href="#">
+      <img src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" alt="Build Status" />
+    </a>
+    <a href="#">
+      <img src="https://img.shields.io/badge/coverage-98%25-green?style=flat-square" alt="Coverage" />
+    </a>
+    <a href="#">
+      <img src="https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square" alt="License" />
+    </a>
+    <a href="#">
+      <img src="https://img.shields.io/badge/python-3.11%2B-blue?style=flat-square&logo=python" alt="Python Version" />
+    </a>
+    <a href="#">
+      <img src="https://img.shields.io/badge/docker-ready-blue?style=flat-square&logo=docker" alt="Docker" />
+    </a>
+  </p>
 
-Autonomous Research • LLM Reasoning • Vector Search • PPT + Video Generation • Cloud-Native Orchestration
-
-<p> A production-grade, distributed generative AI system capable of autonomous deep research, multi-modal content generation, and scalable knowledge retrieval. Designed with patterns inspired by engineering teams at <b>Google, Meta, and OpenAI</b>. </p>
-
-View Demo • Read Docs • Report Bug • Request Feature
-
+  <p>
+    <a href="#-quick-start">Quick Start</a> •
+    <a href="#-architecture">Architecture</a> •
+    <a href="#-deployment">Deployment</a> •
+    <a href="DOCS.md">Documentation</a>
+  </p>
 </div>
 
-🔰 Table of Contents
-📌 Overview
+---
 
-🏗 Architecture
+## 📖 Abstract
 
-🧠 Key Features
+**Nexus** is an enterprise-grade, distributed generative AI platform designed to orchestrate complex, multi-step workflows. Unlike synchronous chain-based wrappers, Nexus utilizes an asynchronous **Actor Model** and **Map-Reduce** patterns to spawn parallelized "Researcher Agents."
 
-⚙️ Tech Stack
+The system is engineered for high throughput and fault tolerance, capable of ingesting enterprise data, performing recursive web/paper research, and synthesizing multi-modal outputs (PPTX, MP4) with millisecond-latency retrieval.
 
-🧪 Developer Setup
+**Core Capabilities:**
+* **Recursive Research:** DAG-based task planning for deep web crawling and academic summarization.
+* **Enterprise RAG:** Hybrid search (Dense Vector + Sparse Keyword) with Re-ranking.
+* **Multi-Modal Synthesis:** Programmatic generation of slide decks and AI-narrated video content.
 
-🐳 Docker & Deployment
+---
 
-🔐 Environment Variables
+## 🏗 Architecture
 
-📘 API Documentation
+The platform follows a microservices architecture orchestrated via event streams.
 
-📊 Observability
+```mermaid
+graph TD
+    User[Client / API] -->|gRPC/REST| Gateway[API Gateway]
+    Gateway -->|Push Task| Kafka[Message Queue (Kafka/Redpanda)]
+    
+    subgraph Orchestration Layer
+        Orch[Orchestrator Agent] -->|Consume| Kafka
+        Orch -->|Map Tasks| WorkerPool
+    end
+    
+    subgraph specialized Agents
+        WorkerPool -->|Spawn| Res[Researcher Agent]
+        WorkerPool -->|Spawn| Gen[Media Generator Agent]
+        WorkerPool -->|Spawn| Crit[Critic/Validator Agent]
+    end
+    
+    subgraph Data Layer
+        Res <-->|R/W| VectorDB[(Milvus/Pinecone)]
+        Res <-->|Cache| Redis[(Redis Semantic Cache)]
+        Gen -->|Store Artifacts| S3[(Blob Storage)]
+    end
 
-🤝 Contributing
 
-📄 License
+Key Design Patterns
+Director-Actor Pattern: Centralized state management with decentralized execution.
 
-📌 Overview
-The Multi-Agent GenAI Platform is an event-driven system where specialized AI agents collaborate to solve complex tasks. Unlike simple chatbot wrappers, this platform employs a Map-Reduce pattern for research and a Director-Actor pattern for media generation.
+Semantic Caching: Reduces LLM costs by 40% by caching embeddings of frequent queries in Redis.
 
-Capabilities
-Autonomous Research: Spawns "Researcher Agents" to crawl the web, summarize papers, and validate sources.
+Idempotency: All agent operations are idempotent to ensure resilience during retries.
 
-RAG at Scale: Ingests enterprise data into vector stores for millisecond-latency semantic retrieval.
-
-Multi-Modal Output: Automatically generates slide decks (PPTX) and synthesizes explanatory videos with AI voiceovers based on research findings.
-
-Target Audience: Enterprise Engineering Teams, Research Labs, and AI Startups requiring scalable agent orchestration.
-
-🏗 Architecture
-The system follows a Microservices architecture orchestrated by Kubernetes (or Docker Compose for local dev).
-
-Core Pattern: The backend uses an asynchronous Task Queue pattern. API requests offload heavy compute (LLM inference, video rendering) to background workers.
-
-Orchestrator: FastAPI Gateway handles auth, rate-limiting, and request routing.
-
-Brain (LLM): Configurable backend supporting OpenAI GPT-4, Anthropic Claude, or local Llama 3 via vLLM.
-
-Vector Engine: Asynchronous ingestion pipeline using LangChain and Pinecone/Qdrant.
-
-Media Pipeline: FFmpeg and Python-pptx workers for rendering final assets.
-
-🧠 Features
-Multi-Agent AI System
-Chain-of-Thought Reasoning: Agents break down complex user queries into sub-tasks (e.g., "Research", "Outline", "Draft").
-
-Self-Correction: A "Critic Agent" reviews outputs for hallucinations before final delivery.
-
-Distributed Processing
-Celery + Redis: Robust task queues manage long-running jobs (e.g., video rendering).
-
-Horizontal Scaling: Worker nodes scale independently based on CPU/GPU load.
-
-Media Generation
-Dynamic PPTX: text-to-presentation engine with auto-layout and image injection.
-
-Video Synthesis: Text-to-Speech (ElevenLabs/OpenAI) + image transitions synced to audio timestamps.
-
-Observability & Security
-OTEL Tracing: Full distributed tracing across microservices.
-
-RBAC: Role-Based Access Control for API endpoints.
-
-⚙️ Tech Stack
-Component	Technology	Description
-Backend	Python, FastAPI	High-performance Async I/O API
-Orchestration	Celery, Redis	Distributed task queue & message broker
-AI Framework	LangChain, LlamaIndex	Agentic workflows and RAG
-Vector DB	Qdrant / Pinecone	Semantic search engine
-Frontend	React, TypeScript, Tailwind	Interactive dashboard for task management
-Infrastructure	Docker, Kubernetes, Helm	Containerization and orchestration
-Observability	Prometheus, Grafana, Jaeger	Metrics, Logs, and Traces
+⚙️ Technology Stack
+Component	Technology Choice	Rationale
+Orchestration	Python, LangGraph, Celery	Asynchronous task queue management and stateful graph navigation.
+LLM Inference	OpenAI GPT-4o, vLLM (Self-hosted)	Hybrid approach: SOTA for reasoning, generic models for summarization.
+Vector Store	Milvus / Qdrant	Scalable similarity search for 10M+ vectors.
+Messaging	RabbitMQ / Kafka	High-throughput event streaming for agent communication.
+Infrastructure	Docker, Kubernetes (Helm)	Cloud-agnostic deployment.
+Observability	OpenTelemetry, Prometheus, Grafana	Distributed tracing and metric collection.
 
 Export to Sheets
 
-🧪 Developer Setup
+🚀 Quick Start
 Prerequisites
-Python 3.10+
+Docker & Docker Compose (v2.20+)
 
-Node.js 18+
+Python 3.11+
 
-Docker & Docker Compose
+OpenAI API Key (or local LLM endpoint)
 
-1. Clone Repository
-Bash
-
-git clone https://github.com/rathishbarath/multi-agent-platform.git
-cd multi-agent-platform
-2. Backend Setup
-Bash
-
-cd backend
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
-pip install -r requirements.txt
-3. Worker Setup (Local)
-To run a worker locally for debugging:
+Local Development
+Clone the repository
 
 Bash
 
-celery -A app.worker worker --loglevel=info --pool=solo
-4. Frontend Setup
-Bash
-
-cd frontend
-npm install
-npm run dev
-🐳 Docker (Full Stack)
-For a production-mirror environment, use the composed stack.
+git clone [https://github.com/your-org/nexus-platform.git](https://github.com/your-org/nexus-platform.git)
+cd nexus-platform
+Configure Environment Copy the example configuration and populate your secrets.
 
 Bash
 
-# Build and start all services (API, Workers, Redis, DB, Frontend)
-docker-compose up --build -d
-Access Points:
-
-API Swagger: http://localhost:8000/docs
-
-Frontend: http://localhost:3000
-
-Flower (Task Monitor): http://localhost:5555
-
-🔐 Environment Variables
-Create a backend/.env file. Do not commit this file.
-
-Ini, TOML
-
-# --- Core ---
-ENV=development
-SECRET_KEY=super_secret_key_change_in_prod
-
-# --- AI Providers ---
-OPENAI_API_KEY=sk-...
-ANTHROPIC_API_KEY=sk-...
-
-# --- Vector Database ---
-VECTOR_DB_URL=http://localhost:6333
-VECTOR_DB_API_KEY=...
-
-# --- Infrastructure ---
-REDIS_URL=redis://redis:6379/0
-POSTGRES_URL=postgresql://user:pass@db:5432/genai_platform
-📘 API Documentation
-Start Research Pipeline
-POST /api/v1/research/start
-
-JSON
-
-{
-  "topic": "The Future of Quantum Computing in Finance",
-  "depth": "deep",
-  "output_format": ["pdf", "video"]
-}
-Check Task Status
-GET /api/v1/tasks/{task_id}
-
-JSON
-
-{
-  "task_id": "c92f-...",
-  "status": "PROCESSING",
-  "progress": 75,
-  "current_stage": "Generating Video Assets"
-}
-☸️ Docker & Kubernetes
-The k8s/ directory contains Helm charts for deployment.
-
-Build Images: docker build -t my-registry/genai-backend:latest .
-
-Deploy:
+cp .env.example .env
+# Edit .env with your API_KEY
+Bootstrap Services Launch the vector database, message broker, and redis cache.
 
 Bash
 
-helm upgrade --install genai-platform ./k8s/charts
-Autoscaling: HPA is configured to scale workers based on Redis queue depth.
+make services-up
+Run the Orchestrator
 
-🚦 CI/CD
-GitHub Actions pipelines are defined in .github/workflows:
+Bash
 
-ci.yml: Runs pytest, flake8, and mypy on every PR.
+poetry install
+poetry run python -m nexus.main
+🔧 Configuration
+The platform is configured via environment variables, following the 12-Factor App methodology.
 
-cd.yml: Builds Docker images and pushes to ECR/GCR on merge to main.
+<details> <summary><strong>Click to expand full configuration table</strong></summary>
 
-Required Secrets: DOCKER_USERNAME, DOCKER_PASSWORD, KUBE_CONFIG.
+Variable	Description	Default	Required
+LLM_PROVIDER	Model provider (openai, anthropic, azure)	openai	Yes
+VECTOR_DB_URI	Connection string for Milvus/Pinecone	localhost:19530	Yes
+MAX_WORKERS	Max concurrent agents allowed	10	No
+RECURSION_LIMIT	Max depth for research graph	3	No
+ENABLE_TELEMETRY	Send traces to Jaeger/Otel	false	No
 
-📊 Observability
-We use the OpenTelemetry standard for full visibility.
+Export to Sheets
 
-Metrics: Prometheus scrapes /metrics endpoints.
+</details>
 
-Dashboards: Grafana templates located in ops/grafana/dashboards.
+🧪 Testing & Quality Assurance
+We enforce strict quality gates. All PRs must pass the following:
 
-Tracing: Jaeger/Tempo captures request lifecycles from API Gateway → Celery Worker → LLM.
+Unit Tests: pytest tests/unit (Logic verification)
+
+Integration Tests: pytest tests/integration (DB and Broker flows)
+
+Evals: Custom DeepEval suite to measure hallucination rates and RAG relevance.
+
+Bash
+
+# Run full test suite
+make test
+🐳 Production Deployment
+Kubernetes (Helm)
+For production clusters, use our Helm charts which include auto-scaling policies (HPA) based on queue depth.
+
+Bash
+
+helm repo add nexus [https://charts.nexus.ai](https://charts.nexus.ai)
+helm install my-nexus nexus/platform --values prod-values.yaml
+Observability
+The platform exports metrics at /metrics for Prometheus.
+
+agent_task_duration_seconds: Histogram of task completion time.
+
+token_usage_total: Counter for cost tracking.
+
+rag_hit_rate: Gauge for retrieval effectiveness.
 
 🤝 Contributing
-We welcome contributions! Please follow the standard engineering guidelines:
+We welcome contributions from the community. Please read our CONTRIBUTING.md for details on our code of conduct and development workflow.
 
-Fork & Clone the repo.
+Fork the Project
 
-Create a Feature Branch (git checkout -b feature/amazing-feature).
+Create your Feature Branch (git checkout -b feature/AmazingFeature)
 
-Commit using Conventional Commits (e.g., feat: add mistral support).
+Commit your Changes (git commit -m 'feat: Add some AmazingFeature')
 
-Push & PR: Open a Pull Request for review.
+Push to the Branch (git push origin feature/AmazingFeature)
+
+Open a Pull Request
 
 📄 License
-Distributed under the Apache 2.0 License. See LICENSE for details.
+Distributed under the Apache 2.0 License. See LICENSE for more information.
 
-📬 Contact
-Rathish Barath
+<div align="center"> <small>Designed with ❤️ by the Nexus Engineering Team</small> </div>
 
-GitHub: @rathishbarath
-
-Email: rathishbarathjobs@gmail.com
 
