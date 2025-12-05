@@ -1,212 +1,281 @@
-[![Integration Matrix](https://github.com/yourorg/autoscillab-ultra/actions/workflows/integration-matrix.yml/badge.svg)](https://github.com/yourorg/autoscillab-ultra/actions/workflows/integration-matrix.yml)
-[![E2E Celery](https://github.com/yourorg/autoscillab-ultra/actions/workflows/e2e-celery.yml/badge.svg)](https://github.com/yourorg/autoscillab-ultra/actions/workflows/e2e-celery.yml)
+# Multi-Agent GenAI Platform
 
-# AutoSciLab Ultra — Complete (Observability + CI/CD + Tests)
+[![CI](https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/ci.yaml/badge.svg)](https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/ci.yaml)
+[![E2E Celery](https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/e2e-celery.yml/badge.svg)](https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/e2e-celery.yml)
+[![CD Pipeline](https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/cd.yaml/badge.svg)](https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/cd.yaml)
+![Python](https://img.shields.io/badge/Python-3.10%20|%203.11-blue)
+![License](https://img.shields.io/badge/License-Apache--2.0-green.svg)
 
-[![CI](https://github.com/yourorg/autoscillab-ultra/actions/workflows/ci.yaml/badge.svg)](https://github.com/yourorg/autoscillab-ultra/actions)
-[![CD](https://github.com/yourorg/autoscillab-ultra/actions/workflows/cd.yaml/badge.svg)](https://github.com/yourorg/autoscillab-ultra/actions)
+> A production-grade **multi-agent GenAI orchestration platform** that autonomously retrieves research, performs LLM-driven reasoning, generates structured insights, produces narrated videos and PPTs, and indexes knowledge using vector search — built with distributed microservices, Celery pipelines, FastAPI, Next.js, Redis, Postgres, Prometheus, Grafana, OpenTelemetry, and Kubernetes + Helm.
 
-## Architecture (Mermaid)
+---
+
+# 📌 Table of Contents
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Developer Quickstart](#developer-quickstart)
+- [Environment Variables](#environment-variables)
+- [Workers & Tasks](#workers--tasks)
+- [Database & Migrations](#database--migrations)
+- [CI/CD Pipelines](#cicd-pipelines)
+- [Observability](#observability)
+- [Security](#security)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+# 🔥 Overview
+
+This repository demonstrates how enterprise GenAI orchestration systems are built inside companies like:
+
+**Google, Meta, Amazon, Microsoft, Intuit, NVIDIA, OpenAI.**
+
+The platform includes:
+
+- Multi-agent reasoning workflows  
+- Research retrieval + LLM summarization  
+- Vector embeddings and semantic search  
+- Automatic PPT and narrated video generation  
+- Distributed Celery pipelines  
+- Production-ready monitoring and logging  
+- Full CI/CD with DockerHub + Kubernetes  
+
+Perfect for portfolio, interviews, and senior-level engineering showcases.
+
+---
+
+# 🏗 Architecture
+
+## **System Architecture Diagram**
 
 ```mermaid
 flowchart LR
-  A[User • Frontend (Next.js)] -->|REST| B[API • FastAPI]
-  B --> C[Orchestrator]
-  C --> D[LLM API]
-  C --> E[Embeddings (sentence-transformers)]
-  C --> F[Pinecone / VectorDB]
-  C --> G[Kafka (events)]
-  B --> H[Celery Workers]
-  H --> I[VideoGen / PPT Creator]
-  B --> J[Postgres / Redis / Metrics]
-  subgraph Observability
-    K[Prometheus] --> L[Grafana]
-    M[OpenTelemetry Collector] --> K
-  end
-```
-## Developer Onboarding (local)
+    subgraph FE [Frontend]
+        A[Next.js UI] -->|REST| B[API Gateway (Next.js Proxy)]
+    end
 
-1. Clone repo
-2. Copy env examples / set env vars (see `.env.example`):
-```
-JWT_SECRET=change_me
-LLM_API_KEY=sk-...
-PINECONE_API_KEY=pc-...
-OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318/v1/traces
-```
-3. Start infra (redis + api + worker):
-```
+    subgraph API [Backend - FastAPI]
+        B --> C[FastAPI Application]
+        C --> D[Multi-Agent Orchestrator]
+        D --> E[LLM API (OpenAI / Local Model)]
+        D --> F[Embeddings Service]
+        D --> G[Vector DB (Pinecone / SQLite)]
+        C --> H[Celery Broker (Redis / RabbitMQ)]
+        H --> I[Workers (PPT, Video, Ingest)]
+        C --> J[Postgres (SQLModel)]
+        C --> K[Redis Cache]
+        C --> L[Prometheus Metrics + OTel Tracing]
+    end
+
+    subgraph Infra [Cloud / Kubernetes]
+        G --> M[Pinecone Cloud]
+        L --> N[Grafana Dashboard]
+        L --> O[OpenTelemetry Collector]
+    end
+🌟 Features
+🧠 Multi-Agent Orchestration
+SearchAgent → retrieve research
+
+SummarizerAgent → LLM summarization
+
+IngestAgent → embeddings + indexing
+
+MediaAgent → PPT & narrated video generation
+
+⚡ Distributed Execution
+Async FastAPI
+
+Celery workers
+
+Redis/RabbitMQ broker
+
+Real-time task tracking
+
+🎥 Automated Media Generation
+PPT (python-pptx)
+
+Narrated video (MoviePy + gTTS + ffmpeg)
+
+🔍 Semantic Search
+Pinecone
+
+SentenceTransformers
+
+SQLite fallback
+
+📈 Observability
+OpenTelemetry
+
+Prometheus + Grafana
+
+JSON logging
+
+Task monitoring panels
+
+🛡 Security
+JWT auth
+
+Rate limiting
+
+Sentry error tracking
+
+NetworkPolicies
+
+PodSecurity
+
+⚙️ Tech Stack
+Backend
+FastAPI, SQLModel, Celery, Redis, Postgres, httpx
+
+Frontend
+Next.js 13, React, Tailwind
+
+Embeddings & Vector Search
+SentenceTransformers, Pinecone, SQLite Fallback
+
+Media
+MoviePy, gTTS, python-pptx
+
+DevOps
+Docker, Kubernetes, Helm, GitHub Actions
+
+🧪 Developer Quickstart
+Clone repository
+bash
+Copy code
+git clone https://github.com/rathishbarath/multi-agent-genai-platform
+cd multi-agent-genai-platform
+Start backend stack
+bash
+Copy code
 cd infra
 docker-compose up --build
-# optionally: docker-compose -f docker-compose.kafka.yaml up --build
-```
-4. Start frontend:
-```
+Start frontend
+bash
+Copy code
 cd frontend/nextjs-app
 npm install
 npm run dev
-```
-5. Run tests:
-```
-# in backend dir
-pytest backend/tests/integration/test_e2e.py
-```
-6. CI/CD: Configure GitHub repo secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`, `KUBE_CONFIG_DATA`.
+🔐 Environment Variables
+Create .env in backend/api:
 
-## Observability & Monitoring
-- Metrics: `/metrics` endpoint (Prometheus)
-- Traces: OTLP exporter to OpenTelemetry Collector or hosted solution
-- Dashboards: `grafana/dashboard_full.json` for import
+ini
+Copy code
+DATABASE_URL_SYNC=postgresql://postgres:postgres@localhost:5432/autoscillab
+DATABASE_URL_ASYNC=postgresql+asyncpg://postgres:postgres@localhost:5432/autoscillab
+REDIS_URL=redis://localhost:6379/0
 
-## Notes
-- The repo provides safe fallbacks: local SQLite vector DB and in-memory Kafka for dev when external services or keys are missing.
-- Replace secrets and API keys before deploying to public clouds.
+JWT_SECRET=change_me
+LLM_API_KEY=
+PINECONE_API_KEY=
+SENTRY_DSN=
 
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318/v1/traces
+🏭 Workers & Tasks
+Start Celery worker:
 
-# AutoSciLab Ultra (Showcase)
-
-This repository is a production-style showcase for an enterprise GenAI research orchestration platform.
-It includes:
-- FastAPI backend + modular routers and services
-- Celery worker stubs (Redis broker)
-- Next.js frontend with a proxy API
-- Dockerfiles and docker-compose for local demo
-- Kubernetes manifests (placeholders) for cloud deployment
-- Prometheus / Grafana placeholders
-
-**Usage (local demo)**
-
-1. Start redis and services with Docker Compose (from infra directory):
-   ```
-   cd infra
-   docker-compose up --build
-   ```
-2. Start frontend:
-   ```
-   cd frontend/nextjs-app
-   npm install
-   npm run dev
-   ```
-3. API: http://localhost:8000
-   Frontend: http://localhost:3000
-
-Replace placeholder implementations with real LLM integrations, vector DBs (Pinecone/Weaviate), Kafka, and production-grade auth (OAuth2/JWT).
-
-
-## Added features: Pinecone, Kafka, Helm, CD pipeline
-
-### Quickstart (local)
-- Set environment variables (example):
-```
-export JWT_SECRET="change_me"
-export LLM_API_KEY="sk-..."
-export PINECONE_API_KEY="pc-..."
-```
-- Start Redis + API + Worker: from infra directory run `docker-compose up --build`
-- To run Kafka locally: `docker-compose -f infra/docker-compose.kafka.yaml up --build`
-- Use sqlite-based vector DB by default if Pinecone is not configured.
-
-### CI/CD
-- CD workflow builds Docker images and pushes to Docker Hub. Set `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` in repo secrets.
-- Deployment step expects `KUBE_CONFIG_DATA` secret with base64 kubeconfig to apply manifests in `infra/kubernetes`.
-
-
-
-## Database / Models / Migrations
-
-This project uses `SQLModel` for models (see `backend/api/models/models.py`). For production, use Postgres.
-
-Migrations with Alembic:
-1. Install requirements: `pip install -r backend/api/requirements.txt`
-2. Initialize alembic in `backend/api` with `alembic init migrations`
-3. Configure alembic.ini to point to your DATABASE_URL (Postgres)
-4. Use `sqlmodel`'s metadata for autogenerate
-5. Example migration commands:
-   - `alembic revision --autogenerate -m "init"`
-   - `alembic upgrade head`
-
-
-## Postgres & Migrations
-
-This repo uses Postgres in docker-compose. To initialize DB:
-
-```
-cd infra
-docker-compose up -d postgres
-# in backend/api
-pip install -r requirements.txt
-alembic init alembic  # if not done
-# configure alembic.ini sqlalchemy.url to point to DATABASE_URL_SYNC or set env var
-alembic revision --autogenerate -m "init"
-alembic upgrade head
-```
-
-## Celery Workers & Tasks
-
-Start worker (requires redis/broker running):
-
-```
+bash
+Copy code
 cd backend/workers
-# run celery worker process, ensure PYTHONPATH includes backend/api
 celery -A api.workers.celery_app.celery_app worker --loglevel=info
-```
+Tasks:
 
-API endpoints:
-- `/agents/start_research` POST {q: "..."} -> returns task_id
-- `/agents/task_status/{task_id}` GET -> returns task DB row
+orchestrate_research
 
+summarization
 
+vector_ingest
 
-## Ultimate Mode Additions (Async + Rate Limiting + Security)
+generate_ppt
 
-- Core services (paper retriever, scraper, agents, orchestrator) are async and use `httpx` for non-blocking I/O.
-- Celery tasks call async orchestrator via `asyncio.run(...)` to bridge sync workers and async code.
-- Rate limiting implemented via `slowapi`. For production, configure Redis storage for `Limiter`.
-- Security headers are applied with `starlette-helmet` middleware.
-- Tests added: `backend/tests/integration/test_orchestrator_async.py` (pytest-asyncio)
+generate_video
 
+🗄 Database & Migrations
+Run migrations:
 
+bash
+Copy code
+cd backend/api
+alembic upgrade head
+🧪 CI/CD Pipelines
+✔ ci.yaml
+Build + Lint + Tests
 
-## Enterprise Additions: E2E Tests, Security, Logging, Sentry
+✔ e2e-celery.yml
+Starts Redis + Postgres + Worker, runs full pipeline test
 
-### E2E Celery Tests
-- Workflow: `.github/workflows/e2e-celery.yml` will run the Celery e2e test using services (Postgres/Redis/RabbitMQ).
-- The test `backend/tests/integration/test_celery_e2e.py` starts a research task and polls `/agents/task_status/{task_id}` until completion to assert success.
+✔ cd.yaml
+Builds Docker image
+Pushes to DockerHub
+Deploys to Kubernetes
 
-### Security & Kubernetes
-- NetworkPolicies: `infra/kubernetes/networkpolicy.yaml` denies by default and allows app-specific traffic.
-- Pod Security: `infra/kubernetes/podsecurity.yaml` enforces `restricted` profile for the `autoscillab` namespace.
-- Secrets rotation: use `external-secrets` with secret stores or sealed-secrets for git-safe secrets. Example: `infra/kubernetes/external_secret_rotation.yaml`
-- RBAC role to allow secrets access: `infra/kubernetes/rbac-secrets.yaml`
+Secrets required:
 
-### Logging & Error Reporting
-- Structured JSON logs are enabled via `python-json-logger` in `api/utils/logging.py`.
-- Sentry integration: set `SENTRY_DSN` env var to enable error reporting and tracing for both API and Celery workers.
-- Grafana dashboard includes panels for task success rates and task events; import `grafana/dashboard_enterprise.json`.
+nginx
+Copy code
+DOCKERHUB_USERNAME
+DOCKERHUB_TOKEN
+KUBE_CONFIG_DATA
+📊 Observability
+Metrics
+Prometheus endpoint: /metrics
 
+Dashboards
+Import these from /grafana:
 
-## Architecture
+dashboard_full.json
 
-```mermaid
-flowchart LR
-  subgraph FE [Frontend]
-    A[Next.js UI] -->|REST| B[API Gateway / Next.js API]
-  end
-  subgraph API [Backend]
-    B --> C[FastAPI App]
-    C --> D[Orchestrator (Agents)]
-    D --> E[LLM API]
-    D --> F[Embeddings Service]
-    D --> G[Vector DB (Pinecone/SQLite)]
-    C --> H[Celery (Broker: Redis/RabbitMQ)]
-    H --> I[Workers (Video/PPT/Indexing)]
-    C --> J[Postgres (SQLModel)]
-    C --> K[Redis (cache)]
-    C --> L[Prometheus + OpenTelemetry]
-  end
-  subgraph Infra[Cluster]
-    G --> M[Pinecone (managed)]
-    L --> N[Grafana]
-    L --> O[Sentry / OTLP Collector]
-  end
-```
+dashboard_enterprise.json
+
+Tracing
+OpenTelemetry exporters enabled.
+
+Logs
+Structured JSON logs via python-json-logger.
+
+🔒 Security
+JWT
+
+Rate limiting
+
+Sentry
+
+PodSecurity restrict
+
+NetworkPolicies
+
+RBAC for secrets
+
+🚀 Deployment
+Docker
+bash
+Copy code
+docker-compose up --build
+Kubernetes
+bash
+Copy code
+kubectl apply -f infra/kubernetes/
+Helm
+bash
+Copy code
+helm install autoscillab helm/
+🤝 Contributing
+Follow Conventional Commits:
+
+vbnet
+Copy code
+feat: add summarizer agent
+fix: redis reconnect logic
+docs: update architecture diagram
+refactor: orchestrator async improvements
+📄 License
+Apache 2.0
+
+📬 Contact
+Maintainer: Rathish Barath
+GitHub: https://github.com/rathishbarath
+Email: YOUR_EMAIL
