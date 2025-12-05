@@ -1,0 +1,8 @@
+
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "autoscillab-api"
+    static_configs:
+      - targets: ["autoscillab-api:8000"]

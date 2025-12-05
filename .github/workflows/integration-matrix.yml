@@ -1,0 +1,81 @@
+name: Integration Matrix
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  e2e-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.10, 3.11, 3.12]
+        db: [postgres, sqlite]
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: autoscillab
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+      rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - 5672:5672
+          - 15672:15672
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          pip install -r backend/api/requirements.txt
+      - name: Setup DB env
+        run: |
+          if [ "${{ matrix.db }}" = "sqlite" ]; then
+            echo "Using sqlite3 for tests"
+            export DATABASE_URL_SYNC="sqlite:///./test_sqlite.db"
+            export DATABASE_URL_ASYNC="sqlite+aiosqlite:///./test_sqlite.db"
+          else
+            echo "Using Postgres for tests"
+            export DATABASE_URL_SYNC="postgresql://postgres:postgres@localhost:5432/autoscillab"
+            export DATABASE_URL_ASYNC="postgresql+asyncpg://postgres:postgres@localhost:5432/autoscillab"
+          fi
+          echo "DATABASE setup done"
+      - name: Wait for services
+        run: |
+          echo "Waiting for dependent services..."
+          sleep 10
+      - name: Run docker-compose if present (optional)
+        run: |
+          docker-compose -f infra/docker-compose.yaml up -d --build || true
+      - name: Initialize DB (alembic offline if needed)
+        run: |
+          cd backend/api || exit 1
+          python - <<'PY'
+import os, time
+from api.db import init_db
+init_db()
+print('DB initialized')
+PY
+      - name: Run Integration Tests
+        env:
+          BACKEND_URL: http://localhost:8000
+        run: |
+          pytest -q backend/tests/integration -x

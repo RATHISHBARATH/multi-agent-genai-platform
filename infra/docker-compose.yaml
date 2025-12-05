@@ -1,0 +1,60 @@
+
+version: '3.8'
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+  api:
+    build:
+      context: ../backend/api
+      dockerfile: Dockerfile
+    volumes:
+      - ../backend/api:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - BROKER_URL=redis://redis:6379/1
+    depends_on:
+      - redis
+  worker:
+    build:
+      context: ../backend/workers
+      dockerfile: Dockerfile
+    volumes:
+      - ../backend/api:/app/api
+    depends_on:
+      - redis
+
+# Additional compose for Kafka (optional)
+version: '3.8'
+services:
+  zookeeper:
+    image: bitnami/zookeeper:3.8
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - "2181:2181"
+  kafka:
+    image: bitnami/kafka:3.5.1
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+
+
+postgres:
+  image: postgres:15-alpine
+  environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+    - POSTGRES_DB=autoscillab
+  ports:
+    - "5432:5432"

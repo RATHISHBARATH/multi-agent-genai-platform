@@ -1,0 +1,57 @@
+name: E2E Celery Tests
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'backend/**'
+      - 'infra/**'
+      - '.github/workflows/e2e-celery.yml'
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: autoscillab
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+      rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - 5672:5672
+          - 15672:15672
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: |
+          pip install -r backend/api/requirements.txt
+      - name: Start services with docker-compose (if present)
+        run: |
+          docker-compose -f infra/docker-compose.yaml up -d --build || true
+      - name: Wait for backend
+        run: |
+          echo "Waiting for backend..."
+          sleep 8
+      - name: Run tests
+        env:
+          BACKEND_URL: http://localhost:8000
+        run: |
+          pytest -q backend/tests/integration/test_celery_e2e.py -q

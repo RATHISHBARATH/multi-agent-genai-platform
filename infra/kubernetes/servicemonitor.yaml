@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: autoscillab-api-servicemonitor
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: autoscillab-api
+  endpoints:
+    - port: http
+      interval: 15s
+      path: /metrics
+      scrapeTimeout: 10s

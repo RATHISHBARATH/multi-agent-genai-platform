@@ -1,0 +1,1 @@
+Prometheus configs go here. For demo, use kube-prometheus-stack or remote_write.

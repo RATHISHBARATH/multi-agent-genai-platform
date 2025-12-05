@@ -1,0 +1,9 @@
+replicaCount: 3
+image:
+  repository: autoscillab/api
+  tag: prod
+secrets:
+  useExternalSecrets: true
+  externalSecrets:
+    PINECONE_API_KEY: /secrets/pinecone/api_key
+    JWT_SECRET: /secrets/jwt/secret

@@ -1,0 +1,8 @@
+replicaCount: 1
+image:
+  repository: autoscillab/api
+  tag: latest
+kafka:
+  enabled: true
+  replicaCount: 1
+  servicePort: 9092

@@ -1,0 +1,22 @@
+{{- if .Values.kafka.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: autoscillab-kafka
+spec:
+  serviceName: "autoscillab-kafka"
+  replicas: {{ .Values.kafka.replicaCount }}
+  selector:
+    matchLabels:
+      app: autoscillab-kafka
+  template:
+    metadata:
+      labels:
+        app: autoscillab-kafka
+    spec:
+      containers:
+        - name: kafka
+          image: bitnami/kafka:3.5.1
+          ports:
+            - containerPort: 9092
+{{- end }}
