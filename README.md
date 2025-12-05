@@ -1,7 +1,8 @@
 🚀 Multi-Agent GenAI Platform
-<div align="center">
 
-<br /> <img src="https://www.google.com/search?q=docs/architecture_placeholder.png" width="85%" alt="System Architecture Diagram" />
+
+
+<img width="1024" height="1024" alt="ChatGPT Image Dec 5, 2025, 07_31_55 PM" src="https://github.com/user-attachments/assets/6c4cf432-fce8-46a4-b349-5a48e849e7f7" />
 
 Autonomous Research • LLM Reasoning • Vector Search • PPT + Video Generation • Cloud-Native Orchestration
 
