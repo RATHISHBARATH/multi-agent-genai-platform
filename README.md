@@ -1,167 +1,144 @@
-# Multi-Agent GenAI Platform
+<!-- PROJECT BANNER -->
+<p align="center">
+  <img src="docs/images/banner.png" width="100%" />
+</p>
 
-[![CI](https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/ci.yaml/badge.svg)](https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/ci.yaml)
-[![E2E Celery](https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/e2e-celery.yml/badge.svg)](https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/e2e-celery.yml)
-[![CD Pipeline](https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/cd.yaml/badge.svg)](https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/cd.yaml)
-![Python](https://img.shields.io/badge/Python-3.10%20|%203.11-blue)
-![License](https://img.shields.io/badge/License-Apache--2.0-green.svg)
-
-> A production-grade **multi-agent GenAI orchestration platform** that autonomously retrieves research, performs LLM-driven reasoning, generates structured insights, produces narrated videos and PPTs, and indexes knowledge using vector search — built with distributed microservices, Celery pipelines, FastAPI, Next.js, Redis, Postgres, Prometheus, Grafana, OpenTelemetry, and Kubernetes + Helm.
+# 🚀 Multi-Agent GenAI Platform  
+**Autonomous Research • LLM Reasoning • Vector Search • PPT & Video Generation • Cloud-Native Architecture**
 
 ---
 
-# 📌 Table of Contents
-- [Overview](#overview)
-- [Architecture](#architecture)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Developer Quickstart](#developer-quickstart)
-- [Environment Variables](#environment-variables)
-- [Workers & Tasks](#workers--tasks)
-- [Database & Migrations](#database--migrations)
-- [CI/CD Pipelines](#cicd-pipelines)
-- [Observability](#observability)
-- [Security](#security)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
+<p align="center">
+  <!-- Build Badges -->
+  <a href="https://github.com/Rathishbarath/multi-agent-genai-platform/actions/workflows/ci.yaml">
+    <img src="https://github.com/Rathishbarath/multi-agent-genai-platform/actions/workflows/ci.yaml/badge.svg" />
+  </a>
+  <a href="https://github.com/Rathishbarath/multi-agent-genai-platform/actions/workflows/e2e-celery.yml">
+    <img src="https://github.com/Rathishbarath/multi-agent-genai-platform/actions/workflows/e2e-celery.yml/badge.svg" />
+  </a>
+  <a href="https://github.com/Rathishbarath/multi-agent-genai-platform/actions/workflows/cd.yaml">
+    <img src="https://github.com/Rathishbarath/multi-agent-genai-platform/actions/workflows/cd.yaml/badge.svg" />
+  </a>
+  <img src="https://img.shields.io/badge/Python-3.10_|_3.11-blue" />
+  <img src="https://img.shields.io/badge/FastAPI-Production--Ready-teal" />
+  <img src="https://img.shields.io/badge/Next.js-Frontend-black" />
+  <img src="https://img.shields.io/badge/Kubernetes-Ready-blue" />
+  <img src="https://img.shields.io/badge/License-Apache_2.0-green" />
+</p>
 
 ---
 
-# 🔥 Overview
+# 📌 Overview
+A fully **production-grade multi-agent GenAI orchestration platform** designed following engineering patterns used at:
 
-This repository demonstrates how enterprise GenAI orchestration systems are built inside companies like:
+**Google · Meta · Amazon · Microsoft · Intuit · NVIDIA · OpenAI**
 
-**Google, Meta, Amazon, Microsoft, Intuit, NVIDIA, OpenAI.**
+The system autonomously:
 
-The platform includes:
+- Retrieves scientific research  
+- Performs LLM reasoning + structured summarization  
+- Generates PPT slides & narrated videos  
+- Indexes and searches knowledge via Pinecone  
+- Runs distributed background pipelines (Celery + Redis/RabbitMQ)  
+- Provides observability (Prometheus, Grafana, OpenTelemetry)  
+- Deploys via Kubernetes + Helm  
+- Runs full CI/CD pipelines with GitHub Actions  
 
-- Multi-agent reasoning workflows  
-- Research retrieval + LLM summarization  
-- Vector embeddings and semantic search  
-- Automatic PPT and narrated video generation  
-- Distributed Celery pipelines  
-- Production-ready monitoring and logging  
-- Full CI/CD with DockerHub + Kubernetes  
-
-Perfect for portfolio, interviews, and senior-level engineering showcases.
+Perfect for **FAANG interviews, enterprise projects, architecture discussions, and portfolio showcase**.
 
 ---
 
-# 🏗 Architecture
+# 🏗 Architecture (PNG)
 
-## **System Architecture Diagram**
+<p align="center">
+  <img src="docs/images/architecture.png" width="95%" />
+</p>
 
-```mermaid
-flowchart LR
-    subgraph FE [Frontend]
-        A[Next.js UI] -->|REST| B[API Gateway (Next.js Proxy)]
-    end
+---
 
-    subgraph API [Backend - FastAPI]
-        B --> C[FastAPI Application]
-        C --> D[Multi-Agent Orchestrator]
-        D --> E[LLM API (OpenAI / Local Model)]
-        D --> F[Embeddings Service]
-        D --> G[Vector DB (Pinecone / SQLite)]
-        C --> H[Celery Broker (Redis / RabbitMQ)]
-        H --> I[Workers (PPT, Video, Ingest)]
-        C --> J[Postgres (SQLModel)]
-        C --> K[Redis Cache]
-        C --> L[Prometheus Metrics + OTel Tracing]
-    end
+# 🧠 Features
 
-    subgraph Infra [Cloud / Kubernetes]
-        G --> M[Pinecone Cloud]
-        L --> N[Grafana Dashboard]
-        L --> O[OpenTelemetry Collector]
-    end
-🌟 Features
-🧠 Multi-Agent Orchestration
-SearchAgent → retrieve research
+### Multi-Agent AI System
+- **SearchAgent** → scientific paper retrieval  
+- **SummarizerAgent** → structured LLM summarization  
+- **IngestAgent** → embeddings + Pinecone index  
+- **MediaAgent** → PPT & narrated video generation  
 
-SummarizerAgent → LLM summarization
+### Distributed Processing
+- FastAPI async backend  
+- Celery workers  
+- Redis/RabbitMQ message broker  
+- Task status tracked in Postgres  
 
-IngestAgent → embeddings + indexing
+### Media Generation
+- PPT creation (`python-pptx`)  
+- AI-narrated videos (MoviePy + gTTS + ffmpeg)  
 
-MediaAgent → PPT & narrated video generation
+### Semantic Search
+- SentenceTransformers embeddings  
+- Pinecone vector database  
+- SQLite fallback for local mode  
 
-⚡ Distributed Execution
-Async FastAPI
+### Observability
+- Prometheus metrics  
+- Grafana dashboards  
+- OpenTelemetry distributed tracing  
+- JSON-structured logging  
 
-Celery workers
+### Security
+- OAuth2 / JWT  
+- Rate limiting  
+- Sentry error tracking  
+- Kubernetes PodSecurity + NetworkPolicies  
 
-Redis/RabbitMQ broker
+---
 
-Real-time task tracking
+# ⚙️ Tech Stack
 
-🎥 Automated Media Generation
-PPT (python-pptx)
+| Layer | Technologies |
+|-------|--------------|
+| **Frontend** | Next.js, React, Tailwind |
+| **Backend** | FastAPI, Celery, SQLModel, Redis, Postgres |
+| **ML/AI** | LLM (OpenAI / Local), SentenceTransformers, Pinecone |
+| **Workers** | Celery, MoviePy, gTTS |
+| **DB / Cache** | Postgres, Redis |
+| **Infra** | Docker, Kubernetes, Helm |
+| **Observability** | Prometheus, Grafana, OpenTelemetry |
+| **CI/CD** | GitHub Actions |
 
-Narrated video (MoviePy + gTTS + ffmpeg)
+---
 
-🔍 Semantic Search
-Pinecone
+# 🧪 Developer Quickstart
 
-SentenceTransformers
-
-SQLite fallback
-
-📈 Observability
-OpenTelemetry
-
-Prometheus + Grafana
-
-JSON logging
-
-Task monitoring panels
-
-🛡 Security
-JWT auth
-
-Rate limiting
-
-Sentry error tracking
-
-NetworkPolicies
-
-PodSecurity
-
-⚙️ Tech Stack
-Backend
-FastAPI, SQLModel, Celery, Redis, Postgres, httpx
-
-Frontend
-Next.js 13, React, Tailwind
-
-Embeddings & Vector Search
-SentenceTransformers, Pinecone, SQLite Fallback
-
-Media
-MoviePy, gTTS, python-pptx
-
-DevOps
-Docker, Kubernetes, Helm, GitHub Actions
-
-🧪 Developer Quickstart
-Clone repository
-bash
-Copy code
+## Clone repository
+```bash
 git clone https://github.com/rathishbarath/multi-agent-genai-platform
 cd multi-agent-genai-platform
-Start backend stack
+🔧 Backend Setup
 bash
 Copy code
-cd infra
-docker-compose up --build
-Start frontend
+cd backend/api
+pip install -r requirements.txt
+uvicorn main:app --reload
+🔧 Worker Setup
+bash
+Copy code
+cd backend/workers
+pip install -r ../api/requirements.txt
+celery -A api.workers.celery_app.celery_app worker --loglevel=info
+🎨 Frontend Setup
 bash
 Copy code
 cd frontend/nextjs-app
 npm install
 npm run dev
+🐳 Docker (Full Stack)
+bash
+Copy code
+cd infra
+docker-compose up --build
 🔐 Environment Variables
-Create .env in backend/api:
+Create backend/api/.env:
 
 ini
 Copy code
@@ -175,107 +152,105 @@ PINECONE_API_KEY=
 SENTRY_DSN=
 
 OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318/v1/traces
-🏭 Workers & Tasks
-Start Celery worker:
-
-bash
-Copy code
-cd backend/workers
-celery -A api.workers.celery_app.celery_app worker --loglevel=info
-Tasks:
-
-orchestrate_research
-
-summarization
-
-vector_ingest
-
-generate_ppt
-
-generate_video
-
-🗄 Database & Migrations
-Run migrations:
-
-bash
-Copy code
-cd backend/api
-alembic upgrade head
-🧪 CI/CD Pipelines
-✔ ci.yaml
-Build + Lint + Tests
-
-✔ e2e-celery.yml
-Starts Redis + Postgres + Worker, runs full pipeline test
-
-✔ cd.yaml
-Builds Docker image
-Pushes to DockerHub
-Deploys to Kubernetes
-
-Secrets required:
-
+🚦 CI/CD Pipelines
+✔ ci.yaml — Build + Test + Lint
+✔ e2e-celery.yml — Full research → summarize → ingest → media test
+✔ cd.yaml — Docker Build → Push → Kubernetes Deploy
+Required GitHub Secrets
 nginx
 Copy code
-DOCKERHUB_USERNAME
-DOCKERHUB_TOKEN
-KUBE_CONFIG_DATA
+DOCKERHUB_USERNAME  
+DOCKERHUB_TOKEN  
+KUBE_CONFIG_DATA  
+JWT_SECRET  
+LLM_API_KEY  
+PINECONE_API_KEY  
 📊 Observability
 Metrics
-Prometheus endpoint: /metrics
-
+bash
+Copy code
+/metrics
 Dashboards
-Import these from /grafana:
+Import from:
 
-dashboard_full.json
-
-dashboard_enterprise.json
-
+bash
+Copy code
+grafana/dashboard_full.json
+grafana/dashboard_enterprise.json
 Tracing
-OpenTelemetry exporters enabled.
+Enabled via OTEL for:
 
-Logs
-Structured JSON logs via python-json-logger.
+FastAPI routes
 
-🔒 Security
-JWT
+Celery tasks
 
-Rate limiting
+Database operations
 
-Sentry
+📘 API Documentation
+Start Research Pipeline
+POST /agents/start_research
 
-PodSecurity restrict
+json
+Copy code
+{ "query": "LLM optimization techniques" }
+Check Task Status
+GET /agents/task_status/{task_id}
 
-NetworkPolicies
+Semantic Search
+GET /research/search?q=...
 
-RBAC for secrets
+🎥 Demo (GIF)
+Generate GIF:
 
-🚀 Deployment
-Docker
 bash
 Copy code
-docker-compose up --build
-Kubernetes
-bash
+bash scripts/generate_demo_gif.sh
+Display in README:
+
+<p align="center"> <img src="docs/demo/demo.gif" width="70%" /> </p>
+🌍 Portfolio Section (For your website)
+Copy this section to your portfolio website.
+
+🌟 Multi-Agent GenAI Platform
+A production-grade orchestration system capable of autonomous research, LLM reasoning, vector search, PPT creation, and narrated video generation — powered by distributed microservices and cloud-native infrastructure.
+
+Highlights
+
+Multi-agent reasoning
+
+Automatic media generation
+
+Semantic search
+
+Kubernetes-native
+
+Prometheus + Grafana observability
+
+Production-level architecture
+
+GitHub:
+👉 https://github.com/rathishbarath/multi-agent-genai-platform
+
+🔎 SEO Keywords (Paste into GitHub Topics)
+sql
 Copy code
-kubectl apply -f infra/kubernetes/
-Helm
-bash
-Copy code
-helm install autoscillab helm/
-🤝 Contributing
+genai, multi-agent-system, llm, robotics, orchestration, automation,
+vector-search, pinecone, fastapi, nextjs, ai-platform, distributed-systems,
+celery, kubernetes, helm, opentelemetry, grafana, prometheus, research-automation,
+semantic-search, python, react, cloud-native
+🤝 Contributing Guidelines
 Follow Conventional Commits:
 
 vbnet
 Copy code
 feat: add summarizer agent
 fix: redis reconnect logic
-docs: update architecture diagram
-refactor: orchestrator async improvements
+docs: improve architecture diagram
+refactor: orchestrator async pipeline
 📄 License
 Apache 2.0
 
 📬 Contact
-Maintainer: Rathish Barath
+Rathish Barath
 GitHub: https://github.com/rathishbarath
-Email: YOUR_EMAIL
+Email: your_email@example.com
