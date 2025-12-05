@@ -1,4 +1,5 @@
 
+![Uploading ChatGPT Image Dec 5, 2025, 08_05_56 PM.png…]()
 
 # 🚀 Multi-Agent GenAI Platform  
 **Autonomous Research • LLM Reasoning • Vector Search • PPT & Video Generation • Cloud-Native Architecture**
