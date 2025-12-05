@@ -1,192 +1,308 @@
-<div align="center">
-  <img width="200" height="200" src="https://github.com/user-attachments/assets/6c4cf432-fce8-46a4-b349-5a48e849e7f7" alt="Platform Logo" />
+!-- PROJECT BANNER -->
+<p align="center">
+  <img src="docs/images/banner.png" width="100%" />
+</p>
 
-  <h1>Nexus: Distributed Multi-Agent Orchestration Engine</h1>
+# 🚀 Multi-Agent GenAI Platform  
+**Autonomous Research • LLM Reasoning • Vector Search • PPT & Video Generation • Cloud-Native Architecture**
 
-  <p>
-    <strong>Event-driven architecture for autonomous deep research, multi-modal synthesis, and RAG at scale.</strong>
-  </p>
-
-  <p>
-    <a href="#">
-      <img src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" alt="Build Status" />
-    </a>
-    <a href="#">
-      <img src="https://img.shields.io/badge/coverage-98%25-green?style=flat-square" alt="Coverage" />
-    </a>
-    <a href="#">
-      <img src="https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square" alt="License" />
-    </a>
-    <a href="#">
-      <img src="https://img.shields.io/badge/python-3.11%2B-blue?style=flat-square&logo=python" alt="Python Version" />
-    </a>
-    <a href="#">
-      <img src="https://img.shields.io/badge/docker-ready-blue?style=flat-square&logo=docker" alt="Docker" />
-    </a>
-  </p>
-
-  <p>
-    <a href="#-quick-start">Quick Start</a> •
-    <a href="#-architecture">Architecture</a> •
-    <a href="#-deployment">Deployment</a> •
-    <a href="DOCS.md">Documentation</a>
-  </p>
-</div>
+<p align="center">
+  <a href="https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/ci.yaml">
+    <img src="https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/ci.yaml/badge.svg" />
+  </a>
+  <a href="https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/e2e-celery.yml">
+    <img src="https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/e2e-celery.yml/badge.svg" />
+  </a>
+  <a href="https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/cd.yaml">
+    <img src="https://github.com/rathishbarath/multi-agent-genai-platform/actions/workflows/cd.yaml/badge.svg" />
+  </a>
+  <img src="https://img.shields.io/badge/Python-3.10_|_3.11-blue" />
+  <img src="https://img.shields.io/badge/FastAPI-Backend-teal" />
+  <img src="https://img.shields.io/badge/Next.js-Frontend-black" />
+  <img src="https://img.shields.io/badge/Kubernetes-Ready-blue" />
+  <img src="https://img.shields.io/badge/License-Apache_2.0-green" />
+</p>
 
 ---
 
-## 📖 Abstract
+# 📌 Overview
 
-**Nexus** is an enterprise-grade, distributed generative AI platform designed to orchestrate complex, multi-step workflows. Unlike synchronous chain-based wrappers, Nexus utilizes an asynchronous **Actor Model** and **Map-Reduce** patterns to spawn parallelized "Researcher Agents."
+This is a **production-grade Multi-Agent GenAI Orchestration Platform** built using real enterprise architecture patterns used inside:
 
-The system is engineered for high throughput and fault tolerance, capable of ingesting enterprise data, performing recursive web/paper research, and synthesizing multi-modal outputs (PPTX, MP4) with millisecond-latency retrieval.
+**Google · Meta · Amazon · Microsoft · Intuit · NVIDIA · OpenAI**
 
-**Core Capabilities:**
-* **Recursive Research:** DAG-based task planning for deep web crawling and academic summarization.
-* **Enterprise RAG:** Hybrid search (Dense Vector + Sparse Keyword) with Re-ranking.
-* **Multi-Modal Synthesis:** Programmatic generation of slide decks and AI-narrated video content.
+The system autonomously:
+
+- Retrieves research papers (Semantic Scholar + arXiv)  
+- Performs structured LLM reasoning  
+- Generates vector embeddings  
+- Indexes knowledge in Pinecone  
+- Produces PPT slides + narrated videos  
+- Runs distributed pipelines using Celery  
+- Exposes a modern Next.js frontend  
+- Ships with full observability (Prometheus, Grafana, OTEL)  
+- Deploys to Kubernetes via Helm + GitHub Actions CD  
+
+This repository is designed for:
+
+🟩 FAANG Interviews  
+🟩 Portfolio Projects  
+🟩 Research Automation  
+🟩 Enterprise-level GenAI development  
 
 ---
 
-## 🏗 Architecture
+# 🏗 Architecture Diagram (PNG)
 
-The platform follows a microservices architecture orchestrated via event streams.
+<p align="center">
+  <img src="docs/images/architecture.png" width="95%" />
+</p>
 
-```mermaid
-graph TD
-    User[Client / API] -->|gRPC/REST| Gateway[API Gateway]
-    Gateway -->|Push Task| Kafka[Message Queue (Kafka/Redpanda)]
-    
-    subgraph Orchestration Layer
-        Orch[Orchestrator Agent] -->|Consume| Kafka
-        Orch -->|Map Tasks| WorkerPool
-    end
-    
-    subgraph specialized Agents
-        WorkerPool -->|Spawn| Res[Researcher Agent]
-        WorkerPool -->|Spawn| Gen[Media Generator Agent]
-        WorkerPool -->|Spawn| Crit[Critic/Validator Agent]
-    end
-    
-    subgraph Data Layer
-        Res <-->|R/W| VectorDB[(Milvus/Pinecone)]
-        Res <-->|Cache| Redis[(Redis Semantic Cache)]
-        Gen -->|Store Artifacts| S3[(Blob Storage)]
-    end
+---
 
+# 🧱 End-to-End System Architecture
 
-Key Design Patterns
-Director-Actor Pattern: Centralized state management with decentralized execution.
+### **Frontend Layer (Next.js 14)**
+- User dashboard  
+- Task status  
+- Trigger workflows  
+- Proxy layer to backend  
+- Secure SSR support  
 
-Semantic Caching: Reduces LLM costs by 40% by caching embeddings of frequent queries in Redis.
+### **Backend Layer (FastAPI)**
+- Auth (JWT / OAuth2)  
+- Research orchestration  
+- LLM summarization  
+- Embeddings + Vector Search  
+- PPT + Video endpoints  
+- Health, metrics, tracing  
 
-Idempotency: All agent operations are idempotent to ensure resilience during retries.
+### **Worker Layer (Celery)**
+Handles long-running async jobs:
+- Research orchestration  
+- Summarization  
+- Vector ingestion  
+- PPT generation  
+- Video generation  
 
-⚙️ Technology Stack
-Component	Technology Choice	Rationale
-Orchestration	Python, LangGraph, Celery	Asynchronous task queue management and stateful graph navigation.
-LLM Inference	OpenAI GPT-4o, vLLM (Self-hosted)	Hybrid approach: SOTA for reasoning, generic models for summarization.
-Vector Store	Milvus / Qdrant	Scalable similarity search for 10M+ vectors.
-Messaging	RabbitMQ / Kafka	High-throughput event streaming for agent communication.
-Infrastructure	Docker, Kubernetes (Helm)	Cloud-agnostic deployment.
-Observability	OpenTelemetry, Prometheus, Grafana	Distributed tracing and metric collection.
+### **ML & Storage Layer**
+- Pinecone vector database  
+- Redis cache  
+- Postgres database  
+- Optional MinIO/S3 for media  
 
-Export to Sheets
+### **DevOps & Observability**
+- Prometheus (metrics)  
+- Grafana (dashboards)  
+- Sentry (errors)  
+- OpenTelemetry (traces)  
+- Kubernetes + Helm  
+- GitHub Actions CI/CD  
 
-🚀 Quick Start
-Prerequisites
-Docker & Docker Compose (v2.20+)
+---
 
-Python 3.11+
+# 🌟 Features
 
-OpenAI API Key (or local LLM endpoint)
+### 🧠 Multi-Agent AI
+- SearchAgent  
+- SummarizerAgent  
+- EmbeddingsAgent  
+- MediaAgent (PPT/Video)  
 
-Local Development
-Clone the repository
+### ⚡ Distributed Pipeline
+- Async FastAPI  
+- Celery workers  
+- Redis/RabbitMQ broker  
 
-Bash
+### 🎥 Media Generation
+- PPT via python-pptx  
+- Narrated video via MoviePy + gTTS  
 
-git clone [https://github.com/your-org/nexus-platform.git](https://github.com/your-org/nexus-platform.git)
-cd nexus-platform
-Configure Environment Copy the example configuration and populate your secrets.
+### 🔍 Semantic Search
+- SentenceTransformers embeddings  
+- Pinecone indexing  
+- SQLite fallback  
 
-Bash
+### 📈 Observability
+- `/metrics` endpoint  
+- OTEL traces  
+- Grafana dashboards  
 
-cp .env.example .env
-# Edit .env with your API_KEY
-Bootstrap Services Launch the vector database, message broker, and redis cache.
+### 🔒 Security
+- JWT Auth  
+- Rate limiting  
+- PodSecurity & NetworkPolicies  
+- Sentry logging  
 
-Bash
+---
 
-make services-up
-Run the Orchestrator
+# ⚙️ Tech Stack
 
-Bash
+| Layer | Technologies |
+|-------|--------------|
+| **Frontend** | Next.js, React, Tailwind |
+| **Backend** | FastAPI, SQLModel, Celery, Redis |
+| **Vector Search** | Pinecone, SentenceTransformers |
+| **Workers** | Celery, MoviePy, python-pptx |
+| **Database** | Postgres |
+| **Infra** | Docker, Kubernetes, Helm |
+| **Observability** | Prometheus, Grafana, OTEL |
+| **CI/CD** | GitHub Actions, DockerHub |
 
-poetry install
-poetry run python -m nexus.main
-🔧 Configuration
-The platform is configured via environment variables, following the 12-Factor App methodology.
+---
 
-<details> <summary><strong>Click to expand full configuration table</strong></summary>
+# 🧪 Developer Quickstart
 
-Variable	Description	Default	Required
-LLM_PROVIDER	Model provider (openai, anthropic, azure)	openai	Yes
-VECTOR_DB_URI	Connection string for Milvus/Pinecone	localhost:19530	Yes
-MAX_WORKERS	Max concurrent agents allowed	10	No
-RECURSION_LIMIT	Max depth for research graph	3	No
-ENABLE_TELEMETRY	Send traces to Jaeger/Otel	false	No
+## Clone the repository
+```bash
+git clone https://github.com/rathishbarath/multi-agent-genai-platform
+cd multi-agent-genai-platform
+🔧 Backend Setup
+bash
+Copy code
+cd backend/api
+pip install -r requirements.txt
+uvicorn main:app --reload
+🚀 Start Celery Worker
+bash
+Copy code
+cd backend/workers
+pip install -r ../api/requirements.txt
+celery -A api.workers.celery_app.celery_app worker --loglevel=info
+🎨 Frontend Setup
+bash
+Copy code
+cd frontend/nextjs-app
+npm install
+npm run dev
+🐳 Full-stack via Docker
+bash
+Copy code
+cd infra
+docker-compose up --build
+🔐 Environment Variables
+Create backend/api/.env:
 
-Export to Sheets
+ini
+Copy code
+DATABASE_URL_SYNC=postgresql://postgres:postgres@localhost:5432/autoscillab
+DATABASE_URL_ASYNC=postgresql+asyncpg://postgres:postgres@localhost:5432/autoscillab
+REDIS_URL=redis://localhost:6379/0
 
-</details>
+JWT_SECRET=change_me
+LLM_API_KEY=
+PINECONE_API_KEY=
+SENTRY_DSN=
 
-🧪 Testing & Quality Assurance
-We enforce strict quality gates. All PRs must pass the following:
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318/v1/traces
+🏭 Database & Migrations
+bash
+Copy code
+cd backend/api
+alembic upgrade head
+🔁 CI/CD Pipelines
+✔ CI
+Tests, linting, build
 
-Unit Tests: pytest tests/unit (Logic verification)
+✔ E2E Celery Tests
+Runs full research → summarize → ingest → media pipeline
 
-Integration Tests: pytest tests/integration (DB and Broker flows)
+✔ CD Deployment
+Docker build
 
-Evals: Custom DeepEval suite to measure hallucination rates and RAG relevance.
+DockerHub push
 
-Bash
+Helm deployment to Kubernetes
 
-# Run full test suite
-make test
-🐳 Production Deployment
-Kubernetes (Helm)
-For production clusters, use our Helm charts which include auto-scaling policies (HPA) based on queue depth.
+Required GitHub Secrets:
+nginx
+Copy code
+DOCKERHUB_USERNAME
+DOCKERHUB_TOKEN
+KUBE_CONFIG_DATA
+JWT_SECRET
+LLM_API_KEY
+PINECONE_API_KEY
+📊 Observability
+Prometheus
+Metrics exposed at:
 
-Bash
+bash
+Copy code
+/metrics
+Grafana
+Dashboards located at:
 
-helm repo add nexus [https://charts.nexus.ai](https://charts.nexus.ai)
-helm install my-nexus nexus/platform --values prod-values.yaml
-Observability
-The platform exports metrics at /metrics for Prometheus.
+bash
+Copy code
+grafana/dashboard_full.json
+grafana/dashboard_enterprise.json
+OpenTelemetry
+Traces emitted by:
 
-agent_task_duration_seconds: Histogram of task completion time.
+FastAPI routes
 
-token_usage_total: Counter for cost tracking.
+Celery operations
 
-rag_hit_rate: Gauge for retrieval effectiveness.
+LLM calls
 
+📘 API Documentation (Summary)
+POST /agents/start_research
+Triggers full research pipeline.
+
+json
+Copy code
+{ "query": "LLM optimization techniques" }
+GET /agents/task_status/{task_id}
+Fetches:
+
+Summary
+
+PPT URL
+
+Video URL
+
+Status
+
+GET /research/search?q=...
+Semantic research lookup.
+
+🎥 Demo GIF
+Generate:
+
+bash
+Copy code
+bash scripts/generate_demo_gif.sh
+Embed:
+
+<p align="center"> <img src="docs/demo/demo.gif" width="70%" /> </p>
+🌍 Portfolio Website Section
+Multi-Agent GenAI Platform
+
+A production-ready AI orchestration engine built with distributed microservices, LLM reasoning, semantic search, and automated media generation.
+
+🔗 GitHub: https://github.com/rathishbarath/multi-agent-genai-platform
+
+🔎 SEO Keywords (GitHub Topics)
+sql
+Copy code
+genai, multi-agent, vector-search, fastapi, nextjs, llm, pinecone,
+orchestration, research-automation, semantic-search, celery, kubernetes,
+helm, opentelemetry, grafana, prometheus, moviepy, python-pptx,
+distributed-systems, cloud-native
 🤝 Contributing
-We welcome contributions from the community. Please read our CONTRIBUTING.md for details on our code of conduct and development workflow.
+Follow Conventional Commits:
 
-Fork the Project
-
-Create your Feature Branch (git checkout -b feature/AmazingFeature)
-
-Commit your Changes (git commit -m 'feat: Add some AmazingFeature')
-
-Push to the Branch (git push origin feature/AmazingFeature)
-
-Open a Pull Request
-
+vbnet
+Copy code
+feat: add summarizer agent
+fix: redis reconnect logic
+docs: improve architecture diagram
+refactor: orchestrator async improvements
 📄 License
-Distributed under the Apache 2.0 License. See LICENSE for more information.
+Apache 2.0
 
-<div align="center"> <small>Designed with ❤️ by the Nexus Engineering Team</small> </div>
-
-
+📬 Contact
+Rathish Barath
+GitHub: https://github.com/rathishbarath
+Email: your_email@example.com
